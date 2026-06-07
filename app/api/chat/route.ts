@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { mistral } from "@ai-sdk/mistral";
 import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai";
 import { CHATBOT_SYSTEM_PROMPT } from "@/lib/prompts/chatbot-system";

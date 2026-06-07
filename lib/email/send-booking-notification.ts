@@ -1,4 +1,4 @@
-import { resend } from "./resend-client";
+import { getResendClient } from "./resend-client";
 import { buildBookingNotificationEmail } from "./templates/booking-notification";
 
 type BookingNotifInput = Parameters<typeof buildBookingNotificationEmail>[0];
@@ -17,7 +17,7 @@ export async function sendBookingNotificationEmail(
 
   try {
     const { subject, html, text } = buildBookingNotificationEmail(data);
-    const { error } = await resend.emails.send({ from: fromEmail, to: toEmail, subject, html, text });
+    const { error } = await getResendClient().emails.send({ from: fromEmail, to: toEmail, subject, html, text });
     if (error) {
       console.error("[sendBookingNotificationEmail] Resend error:", error.message);
       return { success: false, error: error.message };

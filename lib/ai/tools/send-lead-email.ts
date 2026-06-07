@@ -1,6 +1,6 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { resend } from "@/lib/email/resend-client";
+import { getResendClient } from "@/lib/email/resend-client";
 import { buildLeadNotificationEmail } from "@/lib/email/templates/lead-notification";
 
 const inputSchema = z.object({
@@ -57,7 +57,7 @@ export const sendLeadEmailTool = tool({
         timestamp: new Date().toISOString(),
       });
 
-      const { data, error } = await resend.emails.send({
+      const { data, error } = await getResendClient().emails.send({
         from: fromEmail,
         to: toEmail,
         subject,
