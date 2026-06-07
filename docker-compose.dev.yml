@@ -1,0 +1,27 @@
+# docker-compose.dev.yml — Development overrides.
+#
+# Usage (executor-api with hot-reload, Next.js native):
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up executor-api
+#
+# If you also want Next.js in Docker (slower but self-contained):
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile full-stack up
+
+services:
+
+  executor-api:
+    volumes:
+      # Hot-reload: mount source code into container
+      - ./executor-api/app:/app/app
+    # Override CMD to enable uvicorn --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # For dev, Next.js is typically run natively with `npm run dev`.
+  # Uncomment this block only if you need it containerised:
+  nextjs:
+    profiles:
+      - full-stack
+    build:
+      context: .
+      dockerfile: nextjs-app/Dockerfile
+    environment:
+      - NODE_ENV=development

@@ -1,0 +1,66 @@
+services:
+
+  # ── Next.js frontend ──────────────────────────────────────────────────────
+  nextjs:
+    build:
+      context: .
+      dockerfile: nextjs-app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # URL used by server-side Next.js code to reach the executor API
+      - EXECUTOR_API_URL=http://executor-api:8000
+    env_file:
+      - .env.local
+    depends_on:
+      executor-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Executor API (FastAPI) ────────────────────────────────────────────────
+  executor-api:
+    build: ./executor-api
+    ports:
+      - "8000:8000"     # also exposed externally during dev; restrict in prod
+    environment:
+      - SANDBOX_IMAGE=python-sandbox:latest
+      - SANDBOX_TIMEOUT_SECONDS=15
+      - SANDBOX_MEMORY_LIMIT=512m
+      - SANDBOX_CPU_LIMIT=1.0
+      - SANDBOX_PIDS_LIMIT=50
+      - SANDBOX_WORK_VOLUME=veteran-ai-sandbox-work
+      - SANDBOX_WORK_DIR=/sandbox-work
+      - ALLOWED_ORIGINS=["http://localhost:3000","http://nextjs:3000"]
+      - LOG_LEVEL=INFO
+    env_file:
+      - ./executor-api/.env
+    volumes:
+      # Docker socket — required to spawn ephemeral sandbox containers
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Datasets: read-only
+      - ./analyst-service/data:/data:ro
+      # Shared work volume: executor-api creates run-subdirs here;
+      # sandbox containers are also bind-mounted to the same volume
+      - sandbox-work:/sandbox-work
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  # NOTE: python-sandbox is NOT a compose service.
+  # Build it once manually: docker build -t python-sandbox:latest ./python-sandbox
+  # executor-api launches ephemeral sandbox containers from that image at runtime.
+
+volumes:
+  # Named volume for sandbox temp work directories.
+  # Using an explicit name so executor-api can inspect its Mountpoint via Docker API.
+  sandbox-work:
+    name: veteran-ai-sandbox-work
