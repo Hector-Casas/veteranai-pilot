@@ -10,9 +10,51 @@ type Props = {
   messages: UIMessage[];
   status: ChatStatus;
   onSend: (text: string) => Promise<void>;
+  // "dark" (default) preserves the existing look used on /demos/chatbot.
+  // "light" is for embedding on the light-themed landing page (ChatBubble).
+  variant?: "dark" | "light";
 };
 
-export default function ChatInterface({ messages, status, onSend }: Props) {
+// Color lookup so the two surfaces this component renders on (dark demo page,
+// light landing bubble) each get their own palette without branching styles
+// inline at every usage site below.
+const PALETTES = {
+  dark: {
+    muted: "var(--muted)",
+    userBubbleBg: "var(--accent)",
+    userBubbleText: "var(--background)",
+    assistantBubbleBg: "var(--surface-hover)",
+    assistantBubbleBorder: "var(--border)",
+    assistantBubbleText: "var(--foreground)",
+    footerBg: "transparent",
+    footerBorderTop: "var(--border)",
+    inputBoxBg: "var(--surface-hover)",
+    inputBoxBorder: "var(--border)",
+    textColor: "var(--foreground)",
+    placeholderClassName: "placeholder:opacity-40",
+    sendBg: "var(--accent)",
+    sendText: "var(--background)",
+  },
+  light: {
+    muted: "#8a8a9a",
+    userBubbleBg: "var(--brand-navy)",
+    userBubbleText: "#ffffff",
+    assistantBubbleBg: "#f7f8fc",
+    assistantBubbleBorder: "#d5d6e2",
+    assistantBubbleText: "var(--text-primary)",
+    footerBg: "#f7f8fc",
+    footerBorderTop: "#d5d6e2",
+    inputBoxBg: "#ffffff",
+    inputBoxBorder: "#d5d6e2",
+    textColor: "var(--text-primary)",
+    placeholderClassName: "placeholder:text-[#8a8a9a]",
+    sendBg: "var(--brand-navy)",
+    sendText: "#ffffff",
+  },
+} as const;
+
+export default function ChatInterface({ messages, status, onSend, variant = "dark" }: Props) {
+  const palette = PALETTES[variant];
   const [input, setInput] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -72,8 +114,8 @@ export default function ChatInterface({ messages, status, onSend }: Props) {
       >
         {messages.length === 0 && (
           <div className="flex flex-1 items-center justify-center">
-            <p className="text-sm" style={{ color: "var(--muted)" }}>
-              ¡Hola! Pregúntame sobre nuestros servicios de IA...
+            <p className="text-sm" style={{ color: palette.muted }}>
+              Hi! Ask me about our AI services...
             </p>
           </div>
         )}
@@ -94,11 +136,11 @@ export default function ChatInterface({ messages, status, onSend }: Props) {
                 }`}
                 style={
                   isUser
-                    ? { backgroundColor: "var(--accent)", color: "var(--background)" }
+                    ? { backgroundColor: palette.userBubbleBg, color: palette.userBubbleText }
                     : {
-                        backgroundColor: "var(--surface-hover)",
-                        border: "1px solid var(--border)",
-                        color: "var(--foreground)",
+                        backgroundColor: palette.assistantBubbleBg,
+                        border: `1px solid ${palette.assistantBubbleBorder}`,
+                        color: palette.assistantBubbleText,
                       }
                 }
               >
@@ -118,11 +160,11 @@ export default function ChatInterface({ messages, status, onSend }: Props) {
             <div
               className="rounded-2xl rounded-bl-sm px-4 py-3"
               style={{
-                backgroundColor: "var(--surface-hover)",
-                border: "1px solid var(--border)",
+                backgroundColor: palette.assistantBubbleBg,
+                border: `1px solid ${palette.assistantBubbleBorder}`,
               }}
             >
-              <span className="typing-dots" aria-label="Escribiendo...">
+              <span className="typing-dots" aria-label="Typing...">
                 <span />
                 <span />
                 <span />
@@ -135,12 +177,15 @@ export default function ChatInterface({ messages, status, onSend }: Props) {
       </div>
 
       {/* ── Input area — shrink-0 keeps it pinned at the bottom ── */}
-      <div className="shrink-0 p-4" style={{ borderTop: "1px solid var(--border)" }}>
+      <div
+        className="shrink-0 p-4"
+        style={{ backgroundColor: palette.footerBg, borderTop: `1px solid ${palette.footerBorderTop}` }}
+      >
         <div
           className="flex items-end gap-3 rounded-xl p-3"
           style={{
-            backgroundColor: "var(--surface-hover)",
-            border: "1px solid var(--border)",
+            backgroundColor: palette.inputBoxBg,
+            border: `1px solid ${palette.inputBoxBorder}`,
           }}
         >
           <textarea
@@ -148,24 +193,24 @@ export default function ChatInterface({ messages, status, onSend }: Props) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Escribe tu pregunta..."
+            placeholder="Type your question..."
             rows={1}
             disabled={isLoading}
-            className="flex-1 resize-none bg-transparent text-sm outline-none placeholder:opacity-40 disabled:opacity-50"
-            style={{ color: "var(--foreground)" }}
+            className={`flex-1 resize-none bg-transparent text-sm outline-none disabled:opacity-50 ${palette.placeholderClassName}`}
+            style={{ color: palette.textColor }}
           />
           <button
             onClick={handleSubmit}
             disabled={isLoading || !input.trim()}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-opacity disabled:opacity-30 hover:opacity-80"
-            style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
-            aria-label="Enviar mensaje"
+            style={{ backgroundColor: palette.sendBg, color: palette.sendText }}
+            aria-label="Send message"
           >
             <Send size={14} strokeWidth={2} />
           </button>
         </div>
-        <p className="mt-2 text-center text-xs" style={{ color: "var(--muted)" }}>
-          Enter para enviar · Shift+Enter para nueva línea
+        <p className="mt-2 text-center text-xs" style={{ color: palette.muted }}>
+          Enter to send · Shift+Enter for a new line
         </p>
       </div>
     </div>

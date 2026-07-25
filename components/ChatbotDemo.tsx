@@ -1,7 +1,7 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
 import { Calendar, CheckCircle, Loader2, Mail, Zap, XCircle } from "lucide-react";
+import { useChatbotSession } from "@/lib/hooks/use-chatbot-session";
 import ChatInterface from "./ChatInterface";
 
 type ToolState = "input-streaming" | "input-available" | "output-available" | "output-error";
@@ -55,21 +55,21 @@ type EventConfig = {
 
 const EVENT_CONFIG: Record<string, EventConfig> = {
   "tool-send_lead_email": {
-    pendingLabel: "Enviando notificación al equipo...",
-    successLabel: "Email enviado correctamente",
-    errorLabel: "Error al enviar email",
+    pendingLabel: "Sending notification to the team...",
+    successLabel: "Email sent successfully",
+    errorLabel: "Error sending email",
     icon: <Mail size={13} />,
   },
   "tool-check_availability": {
-    pendingLabel: "Consultando disponibilidad...",
-    successLabel: "Disponibilidad obtenida",
-    errorLabel: "Error consultando calendario",
+    pendingLabel: "Checking availability...",
+    successLabel: "Availability retrieved",
+    errorLabel: "Error checking calendar",
     icon: <Calendar size={13} />,
   },
   "tool-book_meeting": {
-    pendingLabel: "Agendando reunión...",
-    successLabel: "Reunión agendada correctamente",
-    errorLabel: "Error al agendar",
+    pendingLabel: "Scheduling meeting...",
+    successLabel: "Meeting scheduled successfully",
+    errorLabel: "Error scheduling meeting",
     icon: <Calendar size={13} />,
   },
 };
@@ -146,19 +146,13 @@ function AgentActivityPanel({ events }: { events: AnyToolPart[] }) {
 // ── Main component ─────────────────────────────────────────────────────────
 
 export default function ChatbotDemo() {
-  const { messages, sendMessage, status } = useChat({
-    onError: (err) => console.error("[ChatbotDemo] useChat error:", err),
-  });
+  const { messages, status, sendText } = useChatbotSession();
 
   // Collect known tool parts across all messages.
   // Cast is safe: isKnownToolPart validates the type string at runtime.
   const toolEvents = messages
     .flatMap((msg) => msg.parts)
     .filter(isKnownToolPart) as unknown as AnyToolPart[];
-
-  const handleSend = async (text: string) => {
-    await sendMessage({ text });
-  };
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-6 lg:flex-row">
@@ -175,7 +169,7 @@ export default function ChatbotDemo() {
           backgroundColor: "var(--surface)",
         }}
       >
-        <ChatInterface messages={messages} status={status} onSend={handleSend} />
+        <ChatInterface messages={messages} status={status} onSend={sendText} />
       </section>
 
       {/* ── Info panel — 1/3 ── */}

@@ -7,23 +7,32 @@ import { CHATBOT_SYSTEM_PROMPT } from "@/lib/prompts/chatbot-system";
 import { sendLeadEmailTool } from "@/lib/ai/tools/send-lead-email";
 import { checkAvailabilityTool } from "@/lib/ai/tools/check-availability";
 import { bookMeetingTool } from "@/lib/ai/tools/book-meeting";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
+  const rateLimitResult = checkRateLimit(getClientIp(req));
+  if (!rateLimitResult.allowed) {
+    return new Response(
+      JSON.stringify({ error: "Too many requests. Please try again later." }),
+      { status: 429, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     const { messages }: { messages: UIMessage[] } = await req.json();
 
     // Inject current date/time so the model can resolve relative expressions
-    // like "mañana", "la próxima semana", "el viernes" without hallucinating dates.
+    // like "tomorrow", "next week", "Friday" without hallucinating dates.
     const now = new Date();
     const todayContext = `
-CONTEXTO TEMPORAL ACTUAL (importante, úsalo para todas las fechas):
-- Fecha y hora actual: ${now.toLocaleString("es-MX", { timeZone: "America/Mexico_City", dateStyle: "full", timeStyle: "short" })}
-- Fecha en formato ISO: ${now.toISOString()}
-- Zona horaria por defecto: America/Mexico_City
+CURRENT TIME CONTEXT (important, use it for all dates):
+- Current date and time: ${now.toLocaleString("en-US", { timeZone: "America/Mexico_City", dateStyle: "full", timeStyle: "short" })}
+- Date in ISO format: ${now.toISOString()}
+- Default time zone: America/Mexico_City
 
-Cuando el usuario diga "mañana", "la próxima semana", "el viernes", etc., calcula las fechas en base a esta fecha actual. NUNCA inventes fechas. NUNCA sugieras un slot específico al usuario que no haya sido devuelto por el tool check_availability.
+When the user says "tomorrow", "next week", "Friday", etc., calculate dates based on this current date. NEVER invent dates. NEVER suggest a specific slot to the user that was not returned by the check_availability tool.
 `;
     const fullSystemPrompt = CHATBOT_SYSTEM_PROMPT + "\n\n" + todayContext;
 
@@ -44,8 +53,14 @@ Cuando el usuario diga "mañana", "la próxima semana", "el viernes", etc., calc
   } catch (error) {
     console.error("[/api/chat] Error:", error);
     return new Response(
-      JSON.stringify({ error: "No se pudo procesar tu mensaje. Intenta de nuevo." }),
+      JSON.stringify({ error: "We couldn't process your message. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
+}
+
+function getClientIp(req: Request): string {
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (forwardedFor) return forwardedFor.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
 }
