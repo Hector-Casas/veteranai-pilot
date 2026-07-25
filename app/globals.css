@@ -10,6 +10,16 @@
   --accent: #00d4ff;
   --accent-dim: rgba(0, 212, 255, 0.1);
   --muted: #8b95a6;
+  --brand-navy: #2d2d91;
+  --brand-red: #c80031;
+
+  /* Light theme tokens — landing page only. The vars above stay dark and
+     keep powering /demos/*, which this palette correction must not touch. */
+  --page-base: #f1f2f8;
+  --text-primary: #14142e;
+  --text-secondary: #54546a;
+  --border-light: #d5d6e2;
+  --surface-light: #ffffff;
 }
 
 @theme inline {
@@ -20,13 +30,27 @@
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
   --color-muted: var(--muted);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-red: var(--brand-red);
+  --color-page-base: var(--page-base);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-light: var(--border-light);
+  --color-surface-light: var(--surface-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-oswald);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
 }
 
 /* Smooth scrolling */
@@ -46,6 +70,20 @@ html {
   background-color: var(--surface-hover);
 }
 .demo-card:hover .demo-card-arrow {
+  transform: translateX(4px);
+}
+
+/* Light-theme variant for DemosShowcase on the landing page — kept separate
+   from .demo-card above so the dark /demos listing page is unaffected. */
+.demo-card-light {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.demo-card-light:hover {
+  transform: translateY(-4px);
+  border-color: var(--brand-navy);
+  box-shadow: 0 12px 32px rgba(45, 45, 145, 0.12);
+}
+.demo-card-light:hover .demo-card-light-arrow {
   transform: translateX(4px);
 }
 
