@@ -14,7 +14,7 @@ type Props = { dataset: DatasetSchema };
 
 export default function DatasetCard({ dataset }: Props) {
   const Icon = ICON_MAP[dataset.icon] ?? BarChart3;
-  const totalRows = getTotalRows(dataset).toLocaleString("es-MX");
+  const totalRows = getTotalRows(dataset).toLocaleString("en-US");
   const accent = dataset.accentColor;
   const accentDim = `${accent}18`; // 18 ≈ 10% opacity in hex
 
@@ -67,20 +67,20 @@ export default function DatasetCard({ dataset }: Props) {
           style={{ color: "var(--muted)" }}
         >
           <span>
-            <span className="font-semibold text-foreground">{dataset.tables.length}</span> tablas
+            <span className="font-semibold text-foreground">{dataset.tables.length}</span> tables
           </span>
           <span className="h-3 w-px" style={{ backgroundColor: "var(--border)" }} />
           <span>
-            <span className="font-semibold text-foreground">~{totalRows}</span> filas
+            <span className="font-semibold text-foreground">~{totalRows}</span> rows
           </span>
           <span className="h-3 w-px" style={{ backgroundColor: "var(--border)" }} />
-          <span>datos sintéticos</span>
+          <span>synthetic data</span>
         </div>
 
         {/* CTA */}
         <div className="mt-auto flex items-center gap-2">
           <span className="text-sm font-semibold" style={{ color: accent }}>
-            Explorar dataset
+            Explore dataset
           </span>
           <span
             className="dataset-card-arrow text-sm transition-transform duration-200"

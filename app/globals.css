@@ -1,20 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0c0e12;
-  --foreground: #eef0f4;
-  --surface: #141720;
-  --surface-hover: #1a1f2e;
-  --border: rgba(255, 255, 255, 0.07);
-  --border-accent: rgba(0, 212, 255, 0.3);
-  --accent: #00d4ff;
-  --accent-dim: rgba(0, 212, 255, 0.1);
-  --muted: #8b95a6;
+  /* Site-wide light theme. These token NAMES originally held a dark
+     palette (the app started as a dark-themed demo shell); every consumer
+     across the app — DemoCard, DatasetCard, ChatbotDemo, AnalystChatInterface,
+     DataTable, SchemaViewer, ChatInterface's "dark" variant, the /demos
+     page shells — references them by name rather than hardcoded hex, so
+     remapping the VALUES here is the single source of truth that relights
+     every one of those consumers without touching their code. Nothing in
+     the app needs the old dark values anymore.
+     --accent points at --brand-navy directly so there's exactly one place
+     that defines "the brand accent." */
+  --background: #f1f2f8;
+  --foreground: #14142e;
+  --surface: #ffffff;
+  --surface-hover: #f7f8fc;
+  --border: #d5d6e2;
+  --border-accent: rgba(45, 45, 145, 0.35);
+  --accent: var(--brand-navy);
+  --accent-dim: color-mix(in srgb, var(--brand-navy) 10%, white);
+  --muted: #54546a;
   --brand-navy: #2d2d91;
   --brand-red: #c80031;
 
-  /* Light theme tokens — landing page only. The vars above stay dark and
-     keep powering /demos/*, which this palette correction must not touch. */
+  /* Same light values, kept under their original semantic names too —
+     landing components (Nav, Hero, TrustStrip, etc.) already reference
+     these directly, so they're left as-is rather than migrated. */
   --page-base: #f1f2f8;
   --text-primary: #14142e;
   --text-secondary: #54546a;
@@ -66,7 +77,7 @@ html {
 .demo-card:hover {
   transform: translateY(-4px);
   border-color: var(--border-accent);
-  box-shadow: 0 0 32px rgba(0, 212, 255, 0.08);
+  box-shadow: 0 0 32px rgba(45, 45, 145, 0.08);
   background-color: var(--surface-hover);
 }
 .demo-card:hover .demo-card-arrow {
@@ -144,11 +155,11 @@ html {
   animation: fadeSlideIn 0.25s ease-out both;
 }
 .suggestion-chip:hover:not(:disabled) {
-  border-color: rgba(0, 212, 255, 0.55) !important;
-  background-color: rgba(0, 212, 255, 0.08) !important;
-  color: #eef0f4 !important;
+  border-color: rgba(45, 45, 145, 0.45) !important;
+  background-color: rgba(45, 45, 145, 0.08) !important;
+  color: #14142e !important;
   transform: scale(1.02);
-  box-shadow: 0 0 14px -3px rgba(0, 212, 255, 0.35);
+  box-shadow: 0 0 14px -3px rgba(45, 45, 145, 0.3);
 }
 .suggestion-chip:active:not(:disabled) {
   transform: scale(0.97);

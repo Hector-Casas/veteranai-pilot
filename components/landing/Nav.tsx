@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const LINKS = [
-  { label: "Demos", href: "#demos" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Demos", href: "/demos" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Nav() {
@@ -36,7 +36,7 @@ export default function Nav() {
         </nav>
 
         <a
-          href="#contact"
+          href="/#contact"
           className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
         >
           Book a call

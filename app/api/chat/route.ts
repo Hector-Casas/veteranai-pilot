@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 import { mistral } from "@ai-sdk/mistral";
 import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai";
 import { CHATBOT_SYSTEM_PROMPT } from "@/lib/prompts/chatbot-system";
+import { LANGUAGE_ENFORCEMENT_DIRECTIVE } from "@/lib/prompts/language-directive";
 import { sendLeadEmailTool } from "@/lib/ai/tools/send-lead-email";
 import { checkAvailabilityTool } from "@/lib/ai/tools/check-availability";
 import { bookMeetingTool } from "@/lib/ai/tools/book-meeting";
@@ -34,7 +35,8 @@ CURRENT TIME CONTEXT (important, use it for all dates):
 
 When the user says "tomorrow", "next week", "Friday", etc., calculate dates based on this current date. NEVER invent dates. NEVER suggest a specific slot to the user that was not returned by the check_availability tool.
 `;
-    const fullSystemPrompt = CHATBOT_SYSTEM_PROMPT + "\n\n" + todayContext;
+    const fullSystemPrompt =
+      CHATBOT_SYSTEM_PROMPT + "\n\n" + todayContext + "\n\n" + LANGUAGE_ENFORCEMENT_DIRECTIVE;
 
     const result = streamText({
       model: mistral("mistral-large-2512"),

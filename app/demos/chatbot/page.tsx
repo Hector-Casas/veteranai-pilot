@@ -1,10 +1,9 @@
-import Link from "next/link";
-import ChatbotDemo from "@/components/ChatbotDemo";
+import ChatbotBuilder from "@/components/chatbot-builder/ChatbotBuilder";
 
 export const metadata = {
-  title: "Customer Support Chatbot — Veteran AI",
+  title: "Chatbot Builder — Veteran AI",
   description:
-    "Live demo: AI assistant that answers questions about Veteran AI services and captures leads via email.",
+    "Pick an industry and a set of capabilities to generate a live, interactive demo chatbot in seconds.",
 };
 
 export default function ChatbotPage() {
@@ -15,18 +14,8 @@ export default function ChatbotPage() {
         className="flex items-center gap-4 border-b px-6 py-4"
         style={{ borderColor: "var(--border)" }}
       >
-        <Link
-          href="/demos"
-          className="text-sm transition-opacity hover:opacity-70"
-          style={{ color: "var(--muted)" }}
-        >
-          ← Back to demos
-        </Link>
-
-        <div className="h-4 w-px" style={{ backgroundColor: "var(--border)" }} />
-
         <h1 className="text-sm font-semibold text-foreground">
-          Customer Support Chatbot
+          Chatbot Builder
         </h1>
 
         <span
@@ -38,8 +27,8 @@ export default function ChatbotPage() {
         </span>
       </header>
 
-      {/* ── Demo layout (client) ── */}
-      <ChatbotDemo />
+      {/* ── Builder (client) ── */}
+      <ChatbotBuilder />
     </div>
   );
 }

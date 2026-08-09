@@ -17,32 +17,32 @@ type BookMeetingOutput =
 
 export const bookMeetingTool = tool({
   description:
-    "Agenda una reunión en el calendario de la consultora en un horario específico. " +
-    "Solo invocar DESPUÉS de que el usuario haya: (1) confirmado un horario específico " +
-    "de los disponibles que se le mostraron, (2) proporcionado nombre y email, " +
-    "(3) confirmado explícitamente que quiere agendar.",
+    "Books a meeting on the consultancy's calendar at a specific time. " +
+    "Only invoke AFTER the user has: (1) confirmed a specific time slot " +
+    "from the ones shown to them, (2) provided name and email, " +
+    "(3) explicitly confirmed they want to book.",
   inputSchema: z.object({
     startUTC: z
       .string()
-      .describe("ISO 8601 con Z del slot elegido convertido a UTC. Ej: 2025-05-10T15:00:00.000Z"),
-    attendeeName: z.string().min(2).describe("Nombre completo del asistente"),
-    attendeeEmail: z.string().email().describe("Email del asistente"),
+      .describe("ISO 8601 with Z of the chosen slot converted to UTC. E.g.: 2025-05-10T15:00:00.000Z"),
+    attendeeName: z.string().min(2).describe("Attendee's full name"),
+    attendeeEmail: z.string().email().describe("Attendee's email"),
     attendeeTimeZone: z
       .string()
       .default("America/Mexico_City")
-      .describe("Zona horaria IANA del asistente"),
+      .describe("Attendee's IANA time zone"),
     notes: z
       .string()
       .optional()
-      .describe("Contexto breve del proyecto o pregunta que quiere tratar en la llamada"),
+      .describe("Brief context about the project or question they want to discuss on the call"),
     conversationSummary: z
       .string()
       .min(30)
       .describe(
-        "Párrafo de 3-5 oraciones en español neutro: por qué quiere la reunión, qué problema tiene, contexto relevante."
+        "3-5 sentence paragraph in neutral English: why they want the meeting, what problem they have, relevant context."
       ),
-    company: z.string().optional().describe("Empresa u organización (opcional)"),
-    phone: z.string().optional().describe("Teléfono (opcional)"),
+    company: z.string().optional().describe("Company or organization (optional)"),
+    phone: z.string().optional().describe("Phone number (optional)"),
   }),
   execute: async (input): Promise<BookMeetingOutput> => {
     const fallbackBookingUrl = process.env.NEXT_PUBLIC_CAL_BOOKING_URL ?? "https://cal.com";
@@ -50,13 +50,13 @@ export const bookMeetingTool = tool({
     // Validate the date before hitting the Cal.com API
     const startDate = new Date(input.startUTC);
     if (isNaN(startDate.getTime())) {
-      return { success: false, error: "Fecha inválida (formato ISO incorrecto)", fallbackBookingUrl };
+      return { success: false, error: "Invalid date (incorrect ISO format)", fallbackBookingUrl };
     }
     if (startDate.getTime() < Date.now()) {
-      return { success: false, error: "La fecha está en el pasado", fallbackBookingUrl };
+      return { success: false, error: "The date is in the past", fallbackBookingUrl };
     }
     if (startDate.getTime() > Date.now() + 1000 * 60 * 60 * 24 * 90) {
-      return { success: false, error: "La fecha está a más de 90 días, fuera de rango razonable", fallbackBookingUrl };
+      return { success: false, error: "The date is more than 90 days out, outside a reasonable range", fallbackBookingUrl };
     }
 
     const result = await createBooking({
@@ -72,7 +72,7 @@ export const bookMeetingTool = tool({
     }
 
     // Format the confirmed time for the bot's response message
-    const formattedDateTime = new Intl.DateTimeFormat("es-MX", {
+    const formattedDateTime = new Intl.DateTimeFormat("en-US", {
       weekday: "long",
       day: "numeric",
       month: "long",

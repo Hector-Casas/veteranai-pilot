@@ -19,7 +19,7 @@ type Params = { datasetId: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { datasetId } = await params;
   const dataset = getDataset(datasetId);
-  if (!dataset) return { title: "Dataset no encontrado — Veteran AI" };
+  if (!dataset) return { title: "Dataset not found — Veteran AI" };
   return {
     title: `${dataset.name} — AI Data Analyst — Veteran AI`,
     description: dataset.description,
@@ -96,7 +96,7 @@ export default async function DatasetPage({ params }: { params: Promise<Params> 
 
           {/* Schema viewer */}
           <div>
-            <h2 className="mb-3 text-sm font-semibold text-foreground">Esquema de tablas</h2>
+            <h2 className="mb-3 text-sm font-semibold text-foreground">Table schema</h2>
             <SchemaViewer tables={dataset.tables} accentColor={accent} />
           </div>
 
@@ -105,7 +105,7 @@ export default async function DatasetPage({ params }: { params: Promise<Params> 
             className="w-fit text-sm transition-opacity hover:opacity-70"
             style={{ color: "var(--muted)" }}
           >
-            ← Volver a datasets
+            ← Back to datasets
           </Link>
         </aside>
 

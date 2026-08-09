@@ -11,20 +11,6 @@ export const metadata = {
 export default function DemosPage() {
   return (
     <div className="flex flex-1 flex-col">
-      {/* Nav */}
-      <header
-        className="border-b px-6 py-4"
-        style={{ borderColor: "var(--border)" }}
-      >
-        <Link
-          href="/"
-          className="text-sm font-medium transition-opacity hover:opacity-70"
-          style={{ color: "var(--muted)" }}
-        >
-          ← Veteran AI
-        </Link>
-      </header>
-
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-20">
         {/* ── Section 1: Header ───────────────────────────── */}
         <section className="mb-16 max-w-2xl">
@@ -49,12 +35,12 @@ export default function DemosPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             <DemoCard
               icon={MessageSquare}
-              title="Customer Support Chatbot"
-              description="Conversational assistant that answers questions about our services, automatically schedules meetings, and sends follow-up emails. Ideal for automating the first point of contact with prospects."
+              title="Build your own AI assistant"
+              description="Pick an industry and a set of capabilities, and we'll generate a live, in-character demo chatbot for a fictional business in seconds — no forms, no setup."
               techTags={[
-                "Function Calling",
-                "Calendar API",
-                "Email automation",
+                "Dynamic prompting",
+                "Streaming responses",
+                "5 industries",
                 "Mistral Large 3",
               ]}
               href="/demos/chatbot"
@@ -91,7 +77,7 @@ export default function DemosPage() {
             Learning solutions tailored to each business.
           </p>
           <Link
-            href="#contact"
+            href="/#contact"
             className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
           >

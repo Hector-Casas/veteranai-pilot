@@ -6,7 +6,7 @@ import { DATASETS } from "@/lib/datasets/schemas";
 export const metadata = {
   title: "AI Data Analyst — Veteran AI",
   description:
-    "Selecciona un dataset y conversa con tus datos. El asistente genera consultas SQL, reportes y gráficas a partir de lenguaje natural.",
+    "Select a dataset and chat with your data. The assistant generates SQL queries, reports, and charts from natural-language prompts.",
 };
 
 export default function DataAnalystPage() {
@@ -17,14 +17,6 @@ export default function DataAnalystPage() {
         className="flex items-center gap-4 border-b px-6 py-4"
         style={{ borderColor: "var(--border)" }}
       >
-        <Link
-          href="/demos"
-          className="text-sm transition-opacity hover:opacity-70"
-          style={{ color: "var(--muted)" }}
-        >
-          ← Back to demos
-        </Link>
-        <div className="h-4 w-px" style={{ backgroundColor: "var(--border)" }} />
         <h1 className="text-sm font-semibold text-foreground">AI Data Analyst</h1>
         <span
           className="ml-auto flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
@@ -45,12 +37,12 @@ export default function DataAnalystPage() {
             <BarChart3 size={24} strokeWidth={1.5} />
           </div>
           <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Analista de Datos con IA
+            AI Data Analyst
           </h2>
           <p className="text-base leading-relaxed" style={{ color: "var(--muted)" }}>
-            Selecciona un dataset para empezar a analizar. El asistente entiende
-            preguntas en lenguaje natural, ejecuta consultas SQL y genera gráficas
-            con Python (pandas + matplotlib).
+            Select a dataset to start analyzing. The assistant understands
+            natural-language questions, runs SQL queries, and generates charts
+            with Python (pandas + matplotlib).
           </p>
         </section>
 
@@ -60,7 +52,7 @@ export default function DataAnalystPage() {
             className="mb-6 text-xs font-semibold uppercase tracking-widest"
             style={{ color: "var(--accent)" }}
           >
-            Elige un dataset
+            Choose a dataset
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {DATASETS.map((ds) => (
@@ -78,18 +70,18 @@ export default function DataAnalystPage() {
           }}
         >
           <h3 className="mb-3 text-xl font-bold text-foreground">
-            ¿Tienes tus propios datos?
+            Have your own data?
           </h3>
           <p className="mx-auto mb-6 max-w-sm text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-            Estos son ejemplos con datos sintéticos. Podemos construir un analista
-            conectado a tu base de datos real o archivos Excel.
+            These are examples with synthetic data. We can build an analyst
+            connected to your real database or Excel files.
           </p>
           <Link
-            href="#contact"
+            href="/#contact"
             className="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
           >
-            Háblanos de tu caso →
+            Tell us about your case →
           </Link>
         </section>
       </main>
