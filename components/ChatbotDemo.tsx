@@ -169,7 +169,7 @@ export default function ChatbotDemo() {
           backgroundColor: "var(--surface)",
         }}
       >
-        <ChatInterface messages={messages} status={status} onSend={sendText} />
+        <ChatInterface messages={messages} status={status} onSend={sendText} variant="light" />
       </section>
 
       {/* ── Info panel — 1/3 ── */}

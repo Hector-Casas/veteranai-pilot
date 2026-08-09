@@ -73,14 +73,14 @@ function toolLabel(part: ToolPart): string {
   const isQuery = part.type === "tool-query_data";
   const out = part.output as { success?: boolean } | undefined;
   if (part.state === "input-streaming")
-    return isQuery ? "Generando consulta SQL..." : "Generando código Python...";
+    return isQuery ? "Generating SQL query..." : "Generating Python code...";
   if (part.state === "input-available")
-    return isQuery ? "Ejecutando query..." : "Ejecutando análisis...";
+    return isQuery ? "Running query..." : "Running analysis...";
   if (part.state === "output-error")
-    return isQuery ? "Error en la query" : "Error en el análisis";
+    return isQuery ? "Query error" : "Analysis error";
   if (part.state === "output-available") {
-    if (!out?.success) return isQuery ? "Error en la query" : "Error en el análisis";
-    return isQuery ? "Resultado recibido" : "Análisis completado";
+    if (!out?.success) return isQuery ? "Query error" : "Analysis error";
+    return isQuery ? "Result received" : "Analysis complete";
   }
   return part.type;
 }
@@ -110,7 +110,7 @@ function CodeExpander({ label, code }: { label: string; code: string }) {
         style={{ color: "var(--muted)" }}
       >
         <Code2 size={11} />
-        {open ? "Ocultar código" : label}
+        {open ? "Hide code" : label}
         {open ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
       </button>
       {open && (
@@ -187,7 +187,9 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
       .map((p) => p.text)
       .join(" ")
       .toLowerCase();
-    return /\b(exporta|exportar|descarga|descargar|guarda|guardar|csv|png|excel|bajame|dame el)\b/.test(text);
+    return /\b(export|download|save|give me|csv|png|excel|exporta|exportar|descarga|descargar|guarda|guardar|dame el|bajame)\b/.test(
+      text
+    );
   }, [messages]);
 
   // Activity panel — last 5 unique tool invocations
@@ -246,11 +248,11 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
     if (part.type === "tool-query_data") {
       const out = part.output as QueryDataOutput;
       if (out.columns && out.rows)
-        downloadCSV(rowsToCSV(out.columns, out.rows), "resultado.csv");
+        downloadCSV(rowsToCSV(out.columns, out.rows), "result.csv");
     } else {
       const out = part.output as GenerateChartOutput;
       const chart = out.charts?.[0];
-      if (chart) downloadPNG(chart, "grafica.png");
+      if (chart) downloadPNG(chart, "chart.png");
     }
   }, []);
 
@@ -275,8 +277,8 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
           <Loader2 size={13} className="animate-spin shrink-0" style={{ color: "var(--accent)" }} />
           <span style={{ color: "var(--muted)" }}>
             {isQuery
-              ? `Ejecutando: ${part.input?.purpose ?? "consulta SQL..."}`
-              : `Analizando: ${part.input?.purpose ?? "código Python..."}`}
+              ? `Running: ${part.input?.purpose ?? "SQL query..."}`
+              : `Analyzing: ${part.input?.purpose ?? "Python code..."}`}
           </span>
         </div>
       );
@@ -288,7 +290,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
           className="rounded-xl px-4 py-3 text-xs"
           style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
         >
-          <span style={{ color: "#ef4444" }}>No pude obtener resultados en este momento.</span>
+          <span style={{ color: "#ef4444" }}>I couldn&apos;t get results right now.</span>
         </div>
       );
     }
@@ -302,8 +304,8 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
               className="rounded-xl px-4 py-3 text-xs"
               style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
             >
-              <p style={{ color: "#ef4444" }}>Error en la consulta: {out.error}</p>
-              {out.sql && <CodeExpander label="Ver SQL que falló" code={out.sql} />}
+              <p style={{ color: "#ef4444" }}>Query error: {out.error}</p>
+              {out.sql && <CodeExpander label="View failed SQL" code={out.sql} />}
             </div>
           );
         }
@@ -320,14 +322,14 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
                 truncated={out.truncated}
               />
             )}
-            {out.sql && <CodeExpander label="Ver SQL generado" code={out.sql} />}
+            {out.sql && <CodeExpander label="View generated SQL" code={out.sql} />}
             {showExport && (
               <button
                 onClick={() => handleExportPart(part)}
                 className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-opacity hover:opacity-80"
                 style={{ backgroundColor: "var(--accent-dim)", color: "var(--accent)" }}
               >
-                <Download size={12} /> Descargar CSV
+                <Download size={12} /> Download CSV
               </button>
             )}
           </div>
@@ -340,8 +342,8 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
               className="rounded-xl px-4 py-3 text-xs"
               style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
             >
-              <p style={{ color: "#ef4444" }}>Error en el análisis: {out.error}</p>
-              {out.code && <CodeExpander label="Ver código que falló" code={out.code} />}
+              <p style={{ color: "#ef4444" }}>Analysis error: {out.error}</p>
+              {out.code && <CodeExpander label="View failed code" code={out.code} />}
             </div>
           );
         }
@@ -355,7 +357,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
               <img
                 key={i}
                 src={`data:image/png;base64,${chart}`}
-                alt={`Gráfica ${i + 1}`}
+                alt={`Chart ${i + 1}`}
                 className="w-full rounded-xl"
                 style={{ border: "1px solid var(--border)" }}
               />
@@ -363,14 +365,14 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             {out.summary && (
               <p className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>{out.summary}</p>
             )}
-            {out.code && <CodeExpander label="Ver código Python generado" code={out.code} />}
+            {out.code && <CodeExpander label="View generated Python code" code={out.code} />}
             {showExport && (
               <button
                 onClick={() => handleExportPart(part)}
                 className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-opacity hover:opacity-80"
                 style={{ backgroundColor: "var(--accent-dim)", color: "var(--accent)" }}
               >
-                <Download size={12} /> Descargar PNG
+                <Download size={12} /> Download PNG
               </button>
             )}
           </div>
@@ -395,7 +397,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             style={{ color: "var(--muted)" }}
           >
             <Zap size={11} style={{ color: "var(--accent)" }} />
-            Actividad del agente
+            Agent activity
           </p>
           {recentTools.map((part) => (
             <div key={part.toolCallId} className="flex items-center gap-2 text-xs">
@@ -418,10 +420,10 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             <BarChart3 size={36} strokeWidth={1.25} style={{ color: "var(--muted)", opacity: 0.35 }} />
             <div>
               <p className="mb-1 text-sm font-medium text-foreground">
-                ¿Qué quieres analizar?
+                What do you want to analyze?
               </p>
               <p className="text-xs" style={{ color: "var(--muted)" }}>
-                Escribe una pregunta o elige una sugerencia para empezar
+                Type a question or pick a suggestion to get started
               </p>
             </div>
 
@@ -429,7 +431,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             <div className="flex flex-col items-center gap-2">
               <p className="flex items-center gap-1 text-xs" style={{ color: "var(--muted)" }}>
                 <Sparkles size={11} style={{ color: "var(--accent)" }} />
-                Sugerencias para empezar
+                Suggestions to get started
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {suggestedQuestions.map((q, i) => (
@@ -441,9 +443,9 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
                     style={{
                       // Stagger the fade-in animation
                       animationDelay: `${i * 60}ms`,
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      color: "rgba(255,255,255,0.75)",
+                      border: "1px solid var(--border)",
+                      backgroundColor: "var(--surface-hover)",
+                      color: "var(--foreground)",
                       cursor: "pointer",
                     }}
                   >
@@ -505,7 +507,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
               className="rounded-2xl rounded-bl-sm px-4 py-3"
               style={{ backgroundColor: "var(--surface-hover)", border: "1px solid var(--border)" }}
             >
-              <span className="typing-dots" aria-label="Analizando...">
+              <span className="typing-dots" aria-label="Analyzing...">
                 <span /><span /><span />
               </span>
             </div>
@@ -524,7 +526,7 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Pregunta algo sobre los datos..."
+            placeholder="Ask something about the data..."
             rows={1}
             disabled={isLoading}
             className="flex-1 resize-none bg-transparent text-sm outline-none placeholder:opacity-40 disabled:opacity-50"
@@ -535,13 +537,13 @@ export default function AnalystChatInterface({ datasetId, suggestedQuestions }: 
             disabled={isLoading || !input.trim()}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-opacity disabled:opacity-30 hover:opacity-80"
             style={{ backgroundColor: "var(--accent)", color: "var(--background)" }}
-            aria-label="Enviar"
+            aria-label="Send"
           >
             <Send size={14} strokeWidth={2} />
           </button>
         </div>
         <p className="mt-1.5 text-center text-xs" style={{ color: "var(--muted)" }}>
-          Enter para enviar · Shift+Enter nueva línea
+          Enter to send · Shift+Enter for a new line
         </p>
       </div>
     </div>

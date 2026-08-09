@@ -130,13 +130,13 @@ export function formatSlotsForUser(
   slotsByDate: Record<string, string[]>,
   timeZone: string = "America/Mexico_City"
 ): string {
-  const dateFormatter = new Intl.DateTimeFormat("es-MX", {
+  const dateFormatter = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     day: "numeric",
     month: "long",
     timeZone,
   });
-  const timeFormatter = new Intl.DateTimeFormat("es-MX", {
+  const timeFormatter = new Intl.DateTimeFormat("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -144,7 +144,7 @@ export function formatSlotsForUser(
   });
 
   const dates = Object.keys(slotsByDate).sort();
-  if (dates.length === 0) return "No hay disponibilidad en ese rango de fechas.";
+  if (dates.length === 0) return "No availability in that date range.";
 
   const lines: string[] = [];
   for (const date of dates) {
@@ -153,11 +153,11 @@ export function formatSlotsForUser(
     const capitalized = label.charAt(0).toUpperCase() + label.slice(1);
 
     if (!slots || slots.length === 0) {
-      lines.push(`${capitalized}: sin disponibilidad`);
+      lines.push(`${capitalized}: no availability`);
     } else {
       const displayed = slots.slice(0, MAX_SLOTS_PER_DAY);
       const times = displayed.map((iso) => timeFormatter.format(new Date(iso))).join(", ");
-      const more = slots.length > MAX_SLOTS_PER_DAY ? ` (+${slots.length - MAX_SLOTS_PER_DAY} más)` : "";
+      const more = slots.length > MAX_SLOTS_PER_DAY ? ` (+${slots.length - MAX_SLOTS_PER_DAY} more)` : "";
       lines.push(`${capitalized}: ${times}${more}`);
     }
   }

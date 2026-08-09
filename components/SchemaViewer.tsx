@@ -27,7 +27,7 @@ export default function SchemaViewer({ tables, accentColor = "var(--accent)" }: 
           >
             {/* Header */}
             <button
-              className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-white/[0.03]"
+              className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-black/[0.03]"
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
             >
@@ -48,7 +48,7 @@ export default function SchemaViewer({ tables, accentColor = "var(--accent)" }: 
                   className="rounded-full px-2 py-0.5 text-xs font-medium tabular-nums"
                   style={{ backgroundColor: "var(--surface-hover)", color: "var(--muted)" }}
                 >
-                  ~{table.rowCount.toLocaleString("es-MX")} filas
+                  ~{table.rowCount.toLocaleString("en-US")} rows
                 </span>
                 <ChevronDown
                   size={15}
@@ -67,7 +67,7 @@ export default function SchemaViewer({ tables, accentColor = "var(--accent)" }: 
                 <table className="w-full text-xs">
                   <thead>
                     <tr style={{ backgroundColor: "var(--surface-hover)" }}>
-                      {["Columna", "Tipo", "Descripción", "Ejemplo"].map((h) => (
+                      {["Column", "Type", "Description", "Example"].map((h) => (
                         <th
                           key={h}
                           className="px-5 py-2.5 text-left font-semibold uppercase tracking-wider"
@@ -84,7 +84,7 @@ export default function SchemaViewer({ tables, accentColor = "var(--accent)" }: 
                         key={col.name}
                         style={{
                           borderTop: "1px solid var(--border)",
-                          backgroundColor: ci % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)",
+                          backgroundColor: ci % 2 === 0 ? "transparent" : "rgba(20,20,46,0.02)",
                         }}
                       >
                         {/* Column name — monospace */}

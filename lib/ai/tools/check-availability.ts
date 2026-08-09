@@ -11,22 +11,22 @@ type CheckAvailabilityOutput =
 
 export const checkAvailabilityTool = tool({
   description:
-    "Consulta la disponibilidad de horarios en el calendario de la consultora para un rango de fechas. " +
-    "Úsalo cuando el usuario quiera agendar una reunión y necesites mostrarle los horarios disponibles. " +
-    "Devuelve los slots disponibles agrupados por día.",
+    "Checks calendar availability for the consultancy over a date range. " +
+    "Use it when the user wants to book a meeting and you need to show them available times. " +
+    "Returns available slots grouped by day.",
   inputSchema: z.object({
     startDate: z
       .string()
-      .regex(DATE_RE, "Debe ser YYYY-MM-DD")
-      .describe("Fecha de inicio del rango (YYYY-MM-DD, no puede ser en el pasado)"),
+      .regex(DATE_RE, "Must be YYYY-MM-DD")
+      .describe("Start date of the range (YYYY-MM-DD, cannot be in the past)"),
     endDate: z
       .string()
-      .regex(DATE_RE, "Debe ser YYYY-MM-DD")
-      .describe("Fecha fin del rango (YYYY-MM-DD, máximo 14 días después de startDate)"),
+      .regex(DATE_RE, "Must be YYYY-MM-DD")
+      .describe("End date of the range (YYYY-MM-DD, maximum 14 days after startDate)"),
     timeZone: z
       .string()
       .optional()
-      .describe('Zona horaria IANA del usuario. Default: "America/Mexico_City"'),
+      .describe('User\'s IANA time zone. Default: "America/Mexico_City"'),
   }),
   execute: async (input): Promise<CheckAvailabilityOutput> => {
     const tz = input.timeZone ?? "America/Mexico_City";

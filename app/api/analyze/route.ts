@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 import { mistral } from "@ai-sdk/mistral";
 import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai";
 import { buildAnalystSystemPrompt } from "@/lib/prompts/analyst-system";
+import { LANGUAGE_ENFORCEMENT_DIRECTIVE } from "@/lib/prompts/language-directive";
 import { buildQueryDataTool } from "@/lib/ai/tools/query-data";
 import { buildGenerateChartTool } from "@/lib/ai/tools/generate-chart";
 
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
 
     const result = streamText({
       model: mistral("mistral-large-2512"),
-      system: buildAnalystSystemPrompt(datasetId),
+      system: buildAnalystSystemPrompt(datasetId) + "\n\n" + LANGUAGE_ENFORCEMENT_DIRECTIVE,
       messages: await convertToModelMessages(messages),
       tools: {
         query_data: buildQueryDataTool(datasetId),
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("[/api/analyze] Error:", error);
     return new Response(
-      JSON.stringify({ error: "No se pudo procesar la solicitud de análisis." }),
+      JSON.stringify({ error: "We couldn't process the analysis request. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

@@ -7,19 +7,19 @@ const MAX_ROWS_TO_LLM = 100;
 export const buildQueryDataTool = (datasetId: string) =>
   tool({
     description:
-      "Ejecuta una query SQL SELECT contra el dataset. Devuelve columnas y filas. " +
-      "Solo SELECT/WITH permitido. Usa LIMIT para evitar resultados demasiado grandes.",
+      "Executes a SQL SELECT query against the dataset. Returns columns and rows. " +
+      "Only SELECT/WITH allowed. Use LIMIT to avoid overly large results.",
     inputSchema: z.object({
       sql: z
         .string()
         .min(10)
         .max(5000)
-        .describe("SQL SELECT válido. Debe empezar con SELECT o WITH. Prohibido DDL/DML."),
+        .describe("Valid SQL SELECT. Must start with SELECT or WITH. DDL/DML forbidden."),
       purpose: z
         .string()
         .min(5)
         .max(200)
-        .describe("Una línea describiendo qué busca esta query (se muestra al usuario)."),
+        .describe("One line describing what this query looks for (shown to the user)."),
     }),
     execute: async ({ sql, purpose }) => {
       const res = await executeSQL(datasetId, sql);

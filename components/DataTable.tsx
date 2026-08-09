@@ -27,15 +27,15 @@ function formatCell(val: unknown): string {
     try {
       const d = new Date(val as string);
       if (isNaN(d.getTime())) return String(val);
-      return d.toLocaleDateString("es-MX", { day: "2-digit", month: "short", year: "numeric" });
+      return d.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
     } catch {
       return String(val);
     }
   }
   if (typeof val === "number") {
     return Number.isInteger(val)
-      ? val.toLocaleString("es-MX")
-      : val.toLocaleString("es-MX", { maximumFractionDigits: 2 });
+      ? val.toLocaleString("en-US")
+      : val.toLocaleString("en-US", { maximumFractionDigits: 2 });
   }
   return String(val);
 }
@@ -79,7 +79,7 @@ export default function DataTable({ columns, rows, rowCount, truncated }: Props)
                 key={ri}
                 style={{
                   borderTop: ri > 0 ? "1px solid var(--border)" : undefined,
-                  backgroundColor: ri % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent",
+                  backgroundColor: ri % 2 === 1 ? "rgba(20,20,46,0.025)" : "transparent",
                 }}
               >
                 {row.map((cell, ci) => (
@@ -105,9 +105,9 @@ export default function DataTable({ columns, rows, rowCount, truncated }: Props)
       <div className="mt-2 flex items-center justify-between text-xs" style={{ color: "var(--muted)" }}>
         <span>
           {hasMore && !showAll
-            ? `Mostrando ${MAX_DISPLAY} de ${rowCount.toLocaleString("es-MX")} filas`
-            : `${rowCount.toLocaleString("es-MX")} filas`}
-          {(truncated) && " · resultado truncado"}
+            ? `Showing ${MAX_DISPLAY} of ${rowCount.toLocaleString("en-US")} rows`
+            : `${rowCount.toLocaleString("en-US")} rows`}
+          {(truncated) && " · result truncated"}
         </span>
         {hasMore && (
           <button
@@ -115,7 +115,7 @@ export default function DataTable({ columns, rows, rowCount, truncated }: Props)
             className="underline transition-opacity hover:opacity-70"
             style={{ color: "var(--accent)" }}
           >
-            {showAll ? "Mostrar menos" : `Ver todas (${rowCount.toLocaleString("es-MX")})`}
+            {showAll ? "Show less" : `Show all (${rowCount.toLocaleString("en-US")})`}
           </button>
         )}
       </div>
