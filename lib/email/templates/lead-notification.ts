@@ -26,7 +26,7 @@ export function buildLeadNotificationEmail(data: LeadData): {
   const date = new Date(timestamp).toLocaleString("es-MX", {
     dateStyle: "long",
     timeStyle: "short",
-    timeZone: "America/Mexico_City",
+    timeZone: "America/New_York",
   });
 
   const subject = `🎯 Nuevo lead: ${prospect.name} — ${prospect.interest.slice(0, 60)}${prospect.interest.length > 60 ? "…" : ""}`;

@@ -117,7 +117,7 @@ Only invoke \`book_meeting\` when the user gives an explicit YES.
 
 **h) Invoke book_meeting**
 - \`startUTC\`: convert the chosen slot (which comes with an offset) to UTC with Z. For example, \`2025-05-10T09:00:00-06:00\` → \`2025-05-10T15:00:00.000Z\`
-- \`attendeeTimeZone\`: the user's actual time zone (default \`America/Mexico_City\`)
+- \`attendeeTimeZone\`: the user's actual time zone (default \`America/New_York\`)
 - \`conversationSummary\`: a 3–5 sentence paragraph contextualizing why they are scheduling and what they are looking for
 
 ### After Invoking book_meeting

@@ -26,10 +26,10 @@ export const checkAvailabilityTool = tool({
     timeZone: z
       .string()
       .optional()
-      .describe('User\'s IANA time zone. Default: "America/Mexico_City"'),
+      .describe('User\'s IANA time zone. Default: "America/New_York"'),
   }),
   execute: async (input): Promise<CheckAvailabilityOutput> => {
-    const tz = input.timeZone ?? "America/Mexico_City";
+    const tz = input.timeZone ?? "America/New_York";
 
     // Clamp startDate to today if it's in the past
     const today = new Date();

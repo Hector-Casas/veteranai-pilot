@@ -29,9 +29,9 @@ export async function POST(req: Request) {
     const now = new Date();
     const todayContext = `
 CURRENT TIME CONTEXT (important, use it for all dates):
-- Current date and time: ${now.toLocaleString("en-US", { timeZone: "America/Mexico_City", dateStyle: "full", timeStyle: "short" })}
+- Current date and time: ${now.toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "full", timeStyle: "short" })}
 - Date in ISO format: ${now.toISOString()}
-- Default time zone: America/Mexico_City
+- Default time zone: America/New_York
 
 When the user says "tomorrow", "next week", "Friday", etc., calculate dates based on this current date. NEVER invent dates. NEVER suggest a specific slot to the user that was not returned by the check_availability tool.
 `;

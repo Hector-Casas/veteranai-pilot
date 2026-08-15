@@ -29,7 +29,7 @@ export const bookMeetingTool = tool({
     attendeeEmail: z.string().email().describe("Attendee's email"),
     attendeeTimeZone: z
       .string()
-      .default("America/Mexico_City")
+      .default("America/New_York")
       .describe("Attendee's IANA time zone"),
     notes: z
       .string()

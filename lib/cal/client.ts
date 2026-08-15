@@ -24,7 +24,7 @@ export async function getAvailableSlots(params: {
   const eventTypeId = process.env.CAL_EVENT_TYPE_ID;
   if (!eventTypeId) return { success: false, error: "CAL_EVENT_TYPE_ID not configured" };
 
-  const tz = params.timeZone ?? "America/Mexico_City";
+  const tz = params.timeZone ?? "America/New_York";
   const url = new URL(`${CAL_BASE}/slots`);
   url.searchParams.set("eventTypeId", eventTypeId);
   url.searchParams.set("start", params.startDate);
@@ -128,7 +128,7 @@ const MAX_SLOTS_PER_DAY = 4;
 
 export function formatSlotsForUser(
   slotsByDate: Record<string, string[]>,
-  timeZone: string = "America/Mexico_City"
+  timeZone: string = "America/New_York"
 ): string {
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
