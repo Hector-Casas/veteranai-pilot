@@ -3,7 +3,7 @@ import { buildSchemaPrompt } from "@/lib/datasets/schema-prompts";
 export function buildAnalystSystemPrompt(datasetId: string): string {
   const now = new Date();
   const dateLabel = now.toLocaleString("en-US", {
-    timeZone: "America/Mexico_City",
+    timeZone: "America/New_York",
     dateStyle: "full",
     timeStyle: "short",
   });

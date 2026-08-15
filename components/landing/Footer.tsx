@@ -7,7 +7,7 @@ export default function Footer() {
             Veteran<span className="text-brand-red">AI</span>
           </p>
           <p className="mt-1 text-xs text-text-secondary">
-            Mexico City, Mexico
+            USA
           </p>
         </div>
 
