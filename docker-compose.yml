@@ -1,5 +1,39 @@
+
 services:
 
+# ── Caddy reverse proxy + automatic HTTPS ─────────────────────────────────
+
+  caddy:
+
+    image: caddy:2-alpine
+
+    ports:
+
+      - "80:80"
+
+      - "443:443"
+
+    volumes:
+
+      # Caddyfile: reverse-proxy + security headers config (read-only)
+
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+      # Persistent volumes for TLS certificates and Caddy state.
+
+      # WITHOUT these, Caddy re-requests certs on every restart and can hit
+
+      # Let's Encrypt's rate limit (5 certs per domain per week).
+
+      - caddy_data:/data
+
+      - caddy_config:/config
+
+    depends_on:
+
+      - nextjs
+
+    restart: unless-stopped
   # ── Next.js frontend ──────────────────────────────────────────────────────
   nextjs:
     build:
@@ -64,3 +98,5 @@ volumes:
   # Using an explicit name so executor-api can inspect its Mountpoint via Docker API.
   sandbox-work:
     name: veteran-ai-sandbox-work
+  caddy_data:
+  caddy_config:
